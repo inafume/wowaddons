@@ -1,3 +1,5 @@
+local rcgenabled = 1
+local rcgaprilfools = 0
 
 local eleframe = CreateFrame("StatusBar", "InaRCG", UIParent, BackdropTemplateMixin and "BackdropTemplate")
 
@@ -35,85 +37,82 @@ local messageArray =
 	"I, GAMON, WILL SAVE US"
 }
 
+local aprilfoolsArray = 
+{
+	"READY CHECK GO WAS CREATED IN 2024",
+	"PREPARE TO FIGHT THE BOSS!",
+	"ENSURE YOU HAVE YOUR BUFFS",
+	"PLEASE ASK QUESTIONS ABOUT THE FIGHT",
+	"THANK YOU, RAIDERS, FOR ATTENDING",
+	"THE RAID LEADERS APPRECIATE YOUR PATIENCE",
+	"CALL OUT IF YOU ARE IN NEED OF ENCHANTS",
+	"SET UP YOUR TALENTS ACCORDINGLY",
+	"WE LOOK FORWARD TO SEEING YOU AT FUTURE EVENTS",
+	"SIGN UP ON DISCORD FOR UPCOMING RAIDS"
+}
+
 eleframe:SetSize(1,1)
 
 eleframe:RegisterEvent("READY_CHECK")
 
 eleframe:SetScript("OnEvent", function(self, event, ...)
-	if event == "READY_CHECK" then
+	if event == "READY_CHECK" and rcgenabled == 1 then
 
 		local message = "temp"
 
 		local af = 1
 
-		local i = math.random(1, table.getn(messageArray) + 1)
+		local workingArray = messageArray
 
-		if type(messageArray[i]) == "table" then
+		if rcgaprilfools == 1 then
+			workingArray = aprilfoolsArray
+		end
 
-			message = messageArray[i][1]
+		local i = math.random(1, table.getn(workingArray) + 1)
+
+		if type(workingArray[i]) == "table" then
+
+			message = workingArray[i][1]
 
 	 		for p=1, 30 do
 				name, rank, subgroup, level, class, fileName, 
 						zone, online, isDead, role, isML = GetRaidRosterInfo(p);
 		
-				if name == messageArray[i][0] then
-					message = messageArray[i][2]
+				if name == workingArray[i][0] then
+					message = workingArray[i][2]
 				end
 			end
 		end
 
-		if type(messageArray[i]) ~= "table" then
+		if type(workingArray[i]) ~= "table" then
 
-			message = messageArray[i]
+			message = workingArray[i]
 
 		end
-
-		-- if af == 1 then
-
-		-- 	local i1 = math.random(1, 10)
-
-		-- 	message = "READY CHECK GO WAS CREATED IN 2024"
-
-		-- 	if i1 == 1 then
-		-- 		message = "PREPARE TO FIGHT THE BOSS!"
-		-- 	end
-			
-		-- 	if i1 == 2 then
-		-- 		message = "ENSURE YOU HAVE YOUR BUFFS"
-		-- 	end
-			
-		-- 	if i1 == 3 then
-		-- 		message = "PLEASE ASK QUESTIONS ABOUT THE FIGHT"
-		-- 	end
-
-		-- 	if i1 == 4 then
-		-- 		message = "THANK YOU, RAIDERS, FOR ATTENDING"
-		-- 	end
-
-		-- 	if i1 == 5 then
-		-- 		message = "THE RAID LEADERS APPRECIATE YOUR PATIENCE"
-		-- 	end
-
-		-- 	if i1 == 6 then
-		-- 		message = "CALL OUT IF YOU ARE IN NEED OF ENCHANTS"
-		-- 	end
-
-		-- 	if i1 == 7 then
-		-- 		message = "SET UP YOUR TALENTS ACCORDINGLY"
-		-- 	end
-
-		-- 	if i1 == 8 then
-		-- 		message = "WE LOOK FORWARD TO SEEING YOU AT FUTURE EVENTS"
-		-- 	end
-
-		-- 	if i1 == 9 then
-		-- 		message = "SIGN UP ON DISCORD FOR UPCOMING RAIDS"
-		-- 	end
-
-		-- end
-
-
 
 		SendChatMessage("Ready Check Go -> " .. message,  IsInGroup(LE_PARTY_CATEGORY_INSTANCE) and "INSTANCE_CHAT" or IsInRaid() and "RAID" or "PARTY")
 	end
 end);
+
+
+local function ReadyCheckGoCommands(msg, editbox)
+	if msg == "off" then
+		rcgenabled = 0
+		print("|cD08080FFReady Check Go|cFFFFFFFF: Disabled!")
+	elseif msg == "on" then
+		rcgenabled = 1
+		print("|cD08080FFReady Check Go|cFFFFFFFF: Enabled!");
+	elseif msg == "afon" then
+		rcgaprilfools = 1
+		print("|cD08080FFReady Check Go|cFFFFFFFF: April Fools enabled!");
+	elseif msg == "afoff" then
+		rcgaprilfools = 0
+		print("|cD08080FFReady Check Go|cFFFFFFFF: April Fools disabled!");
+	else
+		print("|cD08080FFReady Check Go|cFFFFFFFF: Syntax: /rcg (on/off/afon/afoff)");
+	end 
+end
+  
+SLASH_INARCG1 = '/rcg'
+
+SlashCmdList["INARCG"] = ReadyCheckGoCommands 
