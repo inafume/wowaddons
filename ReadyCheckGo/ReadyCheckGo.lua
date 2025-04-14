@@ -28,7 +28,7 @@ local messageArray =
 	"REMEMBER, GREEN IS A COLOR, NOT A SHAPE",
 	"PAY ATTENTION YOU SPATULA",
 	"IMAGINE DRAGONS",
-	{ "Korlatt", "ROLL FOR WEENIES", "FELO KICK OFF A ROLL FOR WEENIES" },
+	{ "Korlatt", "ROLL, YOU WEENIES", "FELO KICK OFF A ROLL FOR CASH MONEY" },
 	"MAKE SURE THE BREAD IS DONE",
 	"MAKE THE BIGGEST THICKEST CLUSTER",
 	"DO YOU WANT TO BE A PASSENGER PRINCESS?",
@@ -36,7 +36,8 @@ local messageArray =
 	"FOR LIONSHIRE!",
 	"I, GAMON, WILL SAVE US",
 	"CAN I INTERRUPT THE RAID TO SHOW YOU ALL ANOTHER GAME?",
-	"CHECK YOUR CHARACTER FOR MISSING GEAR SLOTS"
+	"CHECK YOUR CHARACTER FOR MISSING GEAR SLOTS",
+	"DONT FORGET TO TAKE OFF YOUR SEATBELT DURING TURBULENCE"
 }
 
 local aprilfoolsArray = 
@@ -60,42 +61,66 @@ eleframe:RegisterEvent("READY_CHECK")
 eleframe:SetScript("OnEvent", function(self, event, ...)
 	if event == "READY_CHECK" and rcgenabled == 1 then
 
-		local message = "temp"
-
-		local af = 1
-
-		local workingArray = messageArray
-
-		if rcgaprilfools == 1 then
-			workingArray = aprilfoolsArray
-		end
-
-		local i = math.random(1, table.getn(workingArray) + 1)
-
-		if type(workingArray[i]) == "table" then
-
-			message = workingArray[i][1]
-
-	 		for p=1, 30 do
-				name, rank, subgroup, level, class, fileName, 
-						zone, online, isDead, role, isML = GetRaidRosterInfo(p);
-		
-				if name == workingArray[i][0] then
-					message = workingArray[i][2]
-				end
-			end
-		end
-
-		if type(workingArray[i]) ~= "table" then
-
-			message = workingArray[i]
-
-		end
+		local message = GetData(nil, nil, nil)
 
 		SendChatMessage("Ready Check Go -> " .. message,  IsInGroup(LE_PARTY_CATEGORY_INSTANCE) and "INSTANCE_CHAT" or IsInRaid() and "RAID" or "PARTY")
 	end
 end);
 
+local function GetData(testmode, testid, testname)
+
+	local message = "temp"
+
+	local af = 1
+
+	local workingArray = messageArray
+
+	if rcgaprilfools == 1 then
+		workingArray = aprilfoolsArray
+	end
+
+	if testmode == 1 then
+		workingArray = messageArray
+	end
+
+	if testmode == 2 then
+		workingArray = aprilfoolsArray
+	end
+
+	local i = math.random(1, table.getn(workingArray) + 1)
+
+	if testid ~= nil then
+		i = testid
+	end
+
+	if type(workingArray[i]) == "table" then
+
+		if testplayer == workingArray[i][1] then
+
+			message = workingArray[i][3]
+		else
+			message = workingArray[i][2]
+
+			for p=1, 30 do
+				name, rank, subgroup, level, class, fileName, 
+						zone, online, isDead, role, isML = GetRaidRosterInfo(p);
+		
+				if name == workingArray[i][1] then
+					message = workingArray[i][3]
+				end
+			end
+		end
+
+	end
+
+	if type(workingArray[i]) ~= "table" then
+
+		message = workingArray[i]
+
+	end
+
+	return message
+end
 
 local function ReadyCheckGoCommands(msg, editbox)
 	if msg == "off" then
@@ -110,11 +135,40 @@ local function ReadyCheckGoCommands(msg, editbox)
 	elseif msg == "afoff" then
 		rcgaprilfools = 0
 		print("|cD08080FFReady Check Go|cFFFFFFFF: April Fools disabled!");
+	elseif string.find(msg, "^test") ~= nil then
+
+		index = 0
+		testmode = nil
+		testindex = nil
+		testplayer = nil
+
+		for token in string.gmatch(msg, "[^%s]+") do
+
+			if index == 1 then
+				testmode = token
+			elseif index == 2 then
+				testindex = token
+			elseif index == 3 then
+				testplayer = token
+			end
+
+			index = index + 1
+	 	end
+
+		testmessage = GetData(tonumber(testmode), tonumber(testindex), testplayer)
+
+		if testmessage == nil then
+			print("|cD08080FFReady Check Go|cFFFFFFFF: Test Result returned nothing")
+		else
+			print("|cD08080FFReady Check Go|cFFFFFFFF: Test Result: " .. testmessage)
+		end
 	else
 		print("|cD08080FFReady Check Go|cFFFFFFFF: Syntax: /rcg (on/off/afon/afoff)");
 	end 
 end
-  
+
+
+
 SLASH_INARCG1 = '/rcg'
 
 SlashCmdList["INARCG"] = ReadyCheckGoCommands 
