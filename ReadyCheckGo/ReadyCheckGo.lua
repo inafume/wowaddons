@@ -58,14 +58,7 @@ eleframe:SetSize(1,1)
 
 eleframe:RegisterEvent("READY_CHECK")
 
-eleframe:SetScript("OnEvent", function(self, event, ...)
-	if event == "READY_CHECK" and rcgenabled == 1 then
 
-		local message = GetData(nil, nil, nil)
-
-		SendChatMessage("Ready Check Go -> " .. message,  IsInGroup(LE_PARTY_CATEGORY_INSTANCE) and "INSTANCE_CHAT" or IsInRaid() and "RAID" or "PARTY")
-	end
-end);
 
 local function GetData(testmode, testid, testname)
 
@@ -121,6 +114,15 @@ local function GetData(testmode, testid, testname)
 
 	return message
 end
+
+eleframe:SetScript("OnEvent", function(self, event, ...)
+	if event == "READY_CHECK" and rcgenabled == 1 then
+
+		local message = GetData(nil, nil, nil)
+
+		SendChatMessage("Ready Check Go -> " .. message,  IsInGroup(LE_PARTY_CATEGORY_INSTANCE) and "INSTANCE_CHAT" or IsInRaid() and "RAID" or "PARTY")
+	end
+end);
 
 local function ReadyCheckGoCommands(msg, editbox)
 	if msg == "off" then
