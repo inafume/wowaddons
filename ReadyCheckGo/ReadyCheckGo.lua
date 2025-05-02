@@ -37,7 +37,10 @@ local messageArray =
 	"I, GAMON, WILL SAVE US",
 	"CAN I INTERRUPT THE RAID TO SHOW YOU ALL ANOTHER GAME?",
 	"CHECK YOUR CHARACTER FOR MISSING GEAR SLOTS",
-	"DONT FORGET TO TAKE OFF YOUR SEATBELT DURING TURBULENCE"
+	"DONT FORGET TO TAKE OFF YOUR SEATBELT DURING TURBULENCE",
+	"BRING BALANCE TO THE RAID, SPLIT THE ROUGES",
+	"PRAISE TO THE JACKASS",
+	{ "Nor", "THE INK MINES ARE BACK IN BUSINESS", "THE INK MINES ARE DRY AFTER WIPING AWAY NOR'S TEARS" }
 }
 
 local aprilfoolsArray = 
@@ -139,6 +142,12 @@ local function ReadyCheckGoCommands(msg, editbox)
 		print("|cD08080FFReady Check Go|cFFFFFFFF: April Fools disabled!");
 	elseif string.find(msg, "^test") ~= nil then
 
+		testsay = 0
+
+		if string.find(msg, "^testsay") ~= nil then
+			testsay = 1
+		end
+
 		index = 0
 		testmode = nil
 		testindex = nil
@@ -164,6 +173,10 @@ local function ReadyCheckGoCommands(msg, editbox)
 		else
 			print("|cD08080FFReady Check Go|cFFFFFFFF: Test Result: " .. testmessage)
 		end
+
+		if testsay == 1 and testmessage ~= nil then
+			SendChatMessage("Ready Check Go -> [Test] " .. testmessage,  IsInGroup(LE_PARTY_CATEGORY_INSTANCE) and "INSTANCE_CHAT" or IsInRaid() and "RAID" or "PARTY")
+		end 
 	else
 		print("|cD08080FFReady Check Go|cFFFFFFFF: Syntax: /rcg (on/off/afon/afoff)");
 	end 
