@@ -40,7 +40,18 @@ local messageArray =
 	"DONT FORGET TO TAKE OFF YOUR SEATBELT DURING TURBULENCE",
 	"BRING BALANCE TO THE RAID, SPLIT THE ROUGES",
 	"PRAISE TO THE JACKASS",
-	{ "Nor", "THE INK MINES ARE BACK IN BUSINESS", "THE INK MINES ARE DRY AFTER WIPING AWAY NOR'S TEARS" }
+	{ "Nor", "THE INK MINES ARE BACK IN BUSINESS", "THE INK MINES ARE DRY AFTER WIPING AWAY NOR'S TEARS" },
+	"FINISH SLURPING THE SOUP",
+	{ "Sistersledge", "WELCOME TO THE SLOPPY RAID", "WELCOME TO THE CLEAN RAID" },
+	"HENOO FRENS",
+	"DID YOU EAT THE FLOOR FEESH?",
+	"CRANK UP THE SPICE",
+	"QUIT DIRKING AROUND",
+	"NO MID-FIGHT PICKING UP POTS.",
+	"DONT BE A SLEEPY SLIDEY",
+	"MAKE SURE YOUR GROUP IS ON THE RIGHT COLORS - YELOW READ GWEEN BUE POIPLE RANJ",
+	"THE RELEASE BUTTON IS NOT YOUR FRIEND",
+	"MISS SHIT, LETS DO IT!"
 }
 
 local aprilfoolsArray = 
@@ -83,7 +94,7 @@ local function GetData(testmode, testid, testname)
 		workingArray = aprilfoolsArray
 	end
 
-	local i = math.random(1, table.getn(workingArray) + 1)
+	local i = math.random(1, table.getn(workingArray))
 
 	if testid ~= nil then
 		i = testid
