@@ -1,7 +1,7 @@
-## Interface: 110107
+## Interface: 110200
 ## Title: ReadyCheckGo
 ## Author: Inafume
-## Version: 11.1.7
+## Version: 11.2.0
 ## SavedVariablesPerCharacter: ReadyCheckGoEnabled 
 
 
